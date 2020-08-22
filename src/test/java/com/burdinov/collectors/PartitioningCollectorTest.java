@@ -4,15 +4,15 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PartitioningCollectorTest {
 
     @Test
     public void all_partitions_equal() {
-        List<List<Integer>> collected = IntStream.rangeClosed(1, 30).boxed().collect(Collectors.toPartitionedList(3));
+        List<List<Integer>> collected = IntStream.range(1, 31).boxed().collect(Collectors.toPartitionedList(3));
         assertTrue(collected.stream().allMatch(subList -> subList.size() == 3));
     }
 
