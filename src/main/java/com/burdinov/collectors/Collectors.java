@@ -12,7 +12,7 @@ public class Collectors {
     /**
      * collects the stream to a list of lists of size {@code partitionSize}
      *
-     * @param partitionSize - the size of the sublists (last sublist may be smaller)
+     * @param partitionSize the size of the sublists (last sublist may be smaller)
      * @return a list of lists of size at most {@code partitionSize}
      */
     public static <T> Collector<T, ?, List<List<T>>> toPartitionedList(int partitionSize) {
@@ -82,12 +82,12 @@ public class Collectors {
     /**
      * an aggregating collector that batches the stream and runs the {@code action} on each batch.
      *
-     * @param partitionSize - the size of each batch
-     * @param action        - the action to perform on the batch
+     * @param batchSize the size of each batch
+     * @param action the action to perform on the batch
      * @return null. the batches are discarded after handled by {@code action}
      * @implNote The returned {@code Collector} is not concurrent.
      */
-    public static <T> Collector<T, ?, Void> partitionForeach(int partitionSize, Consumer<? super List<T>> action) {
+    public static <T> Collector<T, ?, Void> batchingForeach(int batchSize, Consumer<? super List<T>> action) {
 
         class Accumulator {
             private final int maxAccumulated;
@@ -123,7 +123,7 @@ public class Collectors {
         return new Collector<T, Accumulator, Void>() {
             @Override
             public Supplier<Accumulator> supplier() {
-                return () -> new Accumulator(partitionSize, action);
+                return () -> new Accumulator(batchSize, action);
             }
 
             @Override
