@@ -5,7 +5,7 @@ Home of small Java goodies.
 1. [Collectors](#Collectors)
 2. [Validation](#Validation)
 
-##Collectors
+## Collectors
 Collectors for java `Stream` to perform batching operations.
 
 * _PartitionedList stream collector_ - to collect a stream into list of fixed-size lists.
@@ -39,21 +39,21 @@ csvRows.stream()
 // validating the properties of Person
 Person validPerson = new Person("Alice", 6);
 
-Either<List<String>, Person> result = validate(validPerson,
+Person result = validate(validPerson,
         check(p -> p.name.matches("[a-zA-Z\\s]+"), "name should contain only letters and spaces"),
         checkNot(p -> p.age < 0, "age should be positive")
 );
-// Right(validPerson)
+// validPerson
 
 
 // failing on some properties of Person
-Person validPerson = new Person("Al1c3", -6);
+Person invalidPerson = new Person("Al1c3", -6);
 
-Either<List<String>, Person> result = validate(validPerson,
+Person result = validate(invalidPerson,
         check(p -> p.name.matches("[a-zA-Z\\s]+"), "name should contain only letters and spaces"),
         checkNot(p -> p.age < 0, "age should be positive")
 );
-//Left(List("name should contain only letters and spaces", "age should be positive"))
+//ValidationException(List("name should contain only letters and spaces", "age should be positive"))
 ```
 `Validator` class contains `validate`, `check` and `checkNot` functions.
 
@@ -63,7 +63,7 @@ In addition, there are also some helpers in `validation.Checks`. for example:
 Person alice = new Person("Alice", 6);
 Person alice2 = new Person("Alice", 6);
         
-Either<List<String>, Person> result = validate(alice,
+Person result = validate(alice,
         check(equalTo(alice2), "persons should have the same name and age")
 );
 ```
@@ -75,8 +75,10 @@ Person bobby = new Person("Bobby", 12);
 
 List<Person> people = Arrays.asList(alice, bobby);
 
-Either<List<String>, List<Person>> result = validate(people,
+List<Person> result = validate(people,
     check(containsExactly(alice, bobby), "people should contain alice and bobby")
 );
 ```
-`Either` belongs to `VAVR.io` library and is a transitive dependency. 
+
+
+<sub><sup>Created by Leonid Burdinov</sup></sub>

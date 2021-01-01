@@ -1,14 +1,15 @@
 package com.burdinov.validation;
 
-import io.vavr.control.Either;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.burdinov.validation.Checks.containsExactly;
 import static com.burdinov.validation.Checks.equalTo;
 import static com.burdinov.validation.Validator.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ValidatorTest {
 
@@ -32,28 +33,28 @@ public class ValidatorTest {
     public void simple_valid_result() {
         Person validPerson = new Person("Alice", 6);
 
-        Either<List<String>, Person> result = validate(validPerson,
+        Person result = validate(validPerson,
                 check(p -> p.name.matches("[a-zA-Z\\s]+"), "name should contain only letters and spaces"),
                 checkNot(p -> p.age < 0, "age should be positive")
         );
 
-        assertThat(result).isEqualTo(Either.right(validPerson));
+        assertThat(result).isEqualTo(validPerson);
     }
 
     @Test
     public void all_fail() {
         Person invalidPerson = new Person("Al1c3", -6);
 
-        Either<List<String>, Person> result = validate(invalidPerson,
+        assertThatThrownBy(() -> validate(invalidPerson,
                 check(p -> p.name.matches("[a-zA-Z\\s]+"), "name should contain only letters and spaces"),
                 checkNot(p -> p.age < 0, "age should be positive")
-        );
-
-        List<String> expectedErrors = new ArrayList<>();
-        expectedErrors.add("name should contain only letters and spaces");
-        expectedErrors.add("age should be positive");
-
-        assertThat(result).isEqualTo(Either.left(expectedErrors));
+                )
+        )
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContainingAll(
+                        "name should contain only letters and spaces",
+                        "age should be positive"
+                );
     }
 
     @Test
@@ -61,11 +62,11 @@ public class ValidatorTest {
         Person alice = new Person("Alice", 6);
         Person alice2 = new Person("Alice", 6);
 
-        Either<List<String>, Person> result = validate(alice,
+        Person result = validate(alice,
                 check(equalTo(alice2), "persons should have the same name and age")
         );
 
-        assertThat(result).isEqualTo(Either.right(alice));
+        assertThat(result).isEqualTo(alice);
     }
 
     @Test
@@ -75,10 +76,10 @@ public class ValidatorTest {
 
         List<Person> people = Arrays.asList(alice, bobby);
 
-        Either<List<String>, List<Person>> result = validate(people,
+        List<Person> result = validate(people,
                 check(containsExactly(alice, bobby), "people should contain alice and bobby")
         );
 
-        assertThat(result).isEqualTo(Either.right(people));
+        assertThat(result).isEqualTo(people);
     }
 }
