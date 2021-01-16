@@ -43,9 +43,7 @@ public class Validator {
 	 * @param tester a function of {@code T => Boolean} where a {@code false} means the validation is successful
 	 * @param error the error in case the validation failed
 	 * @param <T> the type of the object under validation
-	 * @param <ERROR> the type of the error. typically a {@code String} or an {@code Exception}
 	 * @return a {@code Check} type that hold the validation test information
-	 * @return
 	 */
 	public static <T> Check<T> checkNot(Function<T, Boolean> tester, String error) {
 		return check(tester.andThen(res -> !res), error);
