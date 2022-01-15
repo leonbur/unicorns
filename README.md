@@ -58,7 +58,7 @@ Person result = validate(invalidPerson,
 `Validator` class contains `validate`, `check` and `checkNot` functions.
 
 In addition, there are also some helpers in `validation.Checks`. for example:
-* checking equality between Comparable<T> classes with `equalTo`
+* checking equality between classes (whether using `Object.equals()` or `Comparable.compareTo()`) with `equalTo`
 ```java
 Person alice = new Person("Alice", 6);
 Person alice2 = new Person("Alice", 6);
@@ -79,6 +79,3 @@ List<Person> result = validate(people,
     check(containsExactly(alice, bobby), "people should contain alice and bobby")
 );
 ```
-
-
-<sub><sup>Created by Leonid Burdinov</sup></sub>
