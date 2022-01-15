@@ -8,6 +8,10 @@ import java.util.function.Predicate;
 
 public class Checks {
 
+    public static <T> Predicate<T> equalTo(T other) {
+        return t -> t.equals(other);
+    }
+
     public static <T extends Comparable<T>> Predicate<T> equalTo(T other) {
         return t -> t.compareTo(other) == 0;
     }

@@ -14,12 +14,32 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ValidatorTest {
 
-
-    static class Person implements Comparable<Person> {
+    static class Person {
         String name;
         int age;
 
         public Person(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ValidatorTest.Person person = (ValidatorTest.Person) o;
+
+            if (age != person.age) return false;
+            return name.equals(person.name);
+        }
+    }
+
+    static class ComparablePerson implements Comparable<ComparablePerson> {
+        String name;
+        int age;
+
+        public ComparablePerson(String name, int age) {
             this.name = name;
             this.age = age;
         }
@@ -32,10 +52,10 @@ public class ValidatorTest {
             return age;
         }
 
-        private final Comparator<Person> comparator = Comparator.comparing(Person::getName).thenComparing(Person::getAge);
+        private final Comparator<ComparablePerson> comparator = Comparator.comparing(ComparablePerson::getName).thenComparing(ComparablePerson::getAge);
 
         @Override
-        public int compareTo(Person o) {
+        public int compareTo(ComparablePerson o) {
             return comparator.compare(this, o);
         }
     }
@@ -74,6 +94,18 @@ public class ValidatorTest {
         Person alice2 = new Person("Alice", 6);
 
         Person result = validate(alice,
+                check(equalTo(alice2), "persons should have the same name and age")
+        );
+
+        assertThat(result).isEqualTo(alice);
+    }
+
+    @Test
+    public void checks_equalTo_comparable() {
+        ComparablePerson alice = new ComparablePerson("Alice", 6);
+        ComparablePerson alice2 = new ComparablePerson("Alice", 6);
+
+        ComparablePerson result = validate(alice,
                 check(equalTo(alice2), "persons should have the same name and age")
         );
 
