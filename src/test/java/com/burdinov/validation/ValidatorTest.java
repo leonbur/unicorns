@@ -3,6 +3,7 @@ package com.burdinov.validation;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.burdinov.validation.Checks.containsExactly;
@@ -23,9 +24,19 @@ public class ValidatorTest {
             this.age = age;
         }
 
+        public String getName() {
+            return name;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        private final Comparator<Person> comparator = Comparator.comparing(Person::getName).thenComparing(Person::getAge);
+
         @Override
         public int compareTo(Person o) {
-            return name.compareTo(o.name) == 0 ? 0 : age - o.age;
+            return comparator.compare(this, o);
         }
     }
 
