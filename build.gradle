@@ -1,5 +1,7 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
 }
 
 group 'com.burdinov'
@@ -10,10 +12,67 @@ repositories {
 }
 
 dependencies {
-    testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
-    testImplementation("org.assertj:assertj-core:3.17.1")
+    testImplementation('org.junit.jupiter:junit-jupiter:5.8.2')
+    testImplementation('org.assertj:assertj-core:3.22.0')
 }
 
 test {
     useJUnitPlatform()
+}
+
+
+//Publishing
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "OSSRH"
+            setUrl("https://oss.sonatype.org/service/local/staging/deploy/maven2")
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                groupId = 'com.burdinov'
+                name = 'unicorns'
+                description = 'A collection of small Java helpers'
+                url = 'https://github.com/leonbur/unicorns'
+                from components.java
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'leonbur'
+                        name = 'Leon Burdinov'
+                        email = 'leon@burdinov.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:burdinov.com/unicorns.git'
+                    developerConnection = 'scm:git:git@github.com:burdinov.com/unicorns.git'
+                    url = 'https://github.com/leonbur/unicorns'
+                }
+            }
+        }
+    }
+}
+
+
+signing {
+    useGpgCmd()
+    sign publishing.publications.mavenJava
 }
