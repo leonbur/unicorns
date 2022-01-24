@@ -1,4 +1,6 @@
 # Unicorns
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.burdinov/unicorns/badge.svg?gav=true)](https://maven-badges.herokuapp.com/maven-central/com.burdinov/unicorns)
+
 Home of small Java goodies.
 
 ## Table of Contents
