@@ -34,8 +34,8 @@ publishing {
             name = "OSSRH"
             setUrl("https://oss.sonatype.org/service/local/staging/deploy/maven2")
             credentials {
-                username = ossrhUsername ?: "Unknown user"
-                password = ossrhPassword ?: "Unknown password"
+                username = System.getenv("OSSRH_USER") ?: "Unknown user"
+                password = System.getenv("OSSRH_PASS") ?: "Unknown password"
             }
         }
     }
