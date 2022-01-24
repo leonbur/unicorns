@@ -1,5 +1,6 @@
 # Unicorns
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.burdinov/unicorns/badge.svg?gav=true)](https://maven-badges.herokuapp.com/maven-central/com.burdinov/unicorns)
+[![Coverage Status](https://coveralls.io/repos/github/leonbur/unicorns/badge.svg)](https://coveralls.io/github/leonbur/unicorns)
 
 Home of small Java goodies.
 
