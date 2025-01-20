@@ -33,7 +33,7 @@ List<List<Student>> studyGroups = students.stream().collect(Collectors.toPartiti
 int batchSize = 100;
 csvRows.stream()
         .map(toEntity)
-        .collect(Collectors.batchingForeach(batchSize, row -> Database.insert(row)));
+        .collect(Collectors.batchingForeach(batchSize, batch -> Database.insertAll(batch)));
 ```
 
 ## Validation
@@ -58,7 +58,7 @@ Person result = validate(invalidPerson,
 );
 //ValidationException(List("name should contain only letters and spaces", "age should be positive"))
 ```
-`Validator` class contains `validate`, `check` and `checkNot` functions.
+`Validator` class contains `validate`, `check` and `checkNot` functions, as can be seen the in the example above.
 
 In addition, there are also some helpers in `validation.Checks`. for example:
 * checking equality between classes (whether using `Object.equals()` or `Comparable.compareTo()`) with `equalTo`
@@ -71,7 +71,7 @@ Person result = validate(alice,
 );
 ```
 
-* checking that a collection contains elements only the specific element with `containsExactly` (accepting varargs or a collection)
+* checking that a collection contains only specific elements with `containsExactly` (accepting varargs or a collection)
 ```java
 Person alice = new Person("Alice", 6);
 Person bobby = new Person("Bobby", 12);
