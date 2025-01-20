@@ -1,9 +1,6 @@
 package com.burdinov.validation;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class Checks {
@@ -18,16 +15,32 @@ public class Checks {
 
     @SafeVarargs
     public static <T, Coll extends Collection<T>> Predicate<Coll> containsExactly(T... ts) {
-        Set<T> set = new HashSet<>();
-        Collections.addAll(set, ts);
-        return containsExactly(set);
+        return coll -> {
+            if (coll.size() != ts.length)
+                return false;
+
+            Set<T> set = new HashSet<>();
+            for (int i = 0; i < ts.length; i++)
+                set.add(ts[i]);
+            return containsExactly(set).test(coll);
+        };
     }
 
     public static <T, Coll extends Collection<T>> Predicate<Coll> containsExactly(Collection<T> ts) {
         return coll -> {
-            Set<T> a = new HashSet<>(coll);
-            Set<T> b = new HashSet<>(ts);
-            return a.equals(b);
+            if (coll.size() != ts.size())
+                return false;
+            return containsExactly(new HashSet<>(ts)).test(coll);
+        };
+    }
+
+    public static <T, Coll extends Collection<T>> Predicate<Coll> containsExactly(Set<T> ts) {
+        return coll -> {
+            if (coll.size() != ts.size())
+                return false;
+
+            Set<T> collSet = new HashSet<>(coll);
+            return collSet.equals(ts);
         };
     }
 }
