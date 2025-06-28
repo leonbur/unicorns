@@ -2,12 +2,8 @@ plugins {
     id 'java-library'
     id 'jacoco'
     id 'com.github.nbaztec.coveralls-jacoco' version '1.2.14'
-    id 'maven-publish'
-    id 'signing'
+    id "com.vanniktech.maven.publish" version "0.33.0"
 }
-
-group 'com.burdinov'
-version '1.0'
 
 repositories {
     mavenCentral()
@@ -33,56 +29,45 @@ jacocoTestReport {
 
 //Publishing
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
+//https://vanniktech.github.io/gradle-maven-publish-plugin/central/#configuring-the-pom
+mavenPublishing {
+    publishToMavenCentral()
 
-publishing {
-    repositories {
-        maven {
-            name = "OSSRH"
-            setUrl("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-            credentials {
-                username = System.getenv("OSSRH_USER") ?: "Unknown user"
-                password = System.getenv("OSSRH_PASS") ?: "Unknown password"
+    signAllPublications()
+
+    coordinates("com.burdinov", "unicorns", "1.0")
+
+    pom {
+        name = "Unicorns"
+        description = " Useful Java functions"
+        inceptionYear = "2020"
+        url = "https://github.com/leonbur/unicorns"
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution = "http://www.apache.org/licenses/LICENSE-2.0.txt"
             }
         }
-    }
-
-    publications {
-        mavenJava(MavenPublication) {
-            pom {
-                groupId = 'com.burdinov'
-                name = 'unicorns'
-                description = 'A collection of small Java helpers'
-                url = 'https://github.com/leonbur/unicorns'
-                from components.java
-                licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'leonbur'
-                        name = 'Leon Burdinov'
-                        email = 'leon@burdinov.com'
-                    }
-                }
-                scm {
-                    connection = 'scm:git:git@github.com:burdinov.com/unicorns.git'
-                    developerConnection = 'scm:git:git@github.com:burdinov.com/unicorns.git'
-                    url = 'https://github.com/leonbur/unicorns'
-                }
+        developers {
+            developer {
+                id = 'leonbur'
+                name = 'Leon Burdinov'
+                url = 'https://github.com/leonbur/'
             }
+        }
+        scm {
+            connection = 'scm:git:git@github.com:burdinov.com/unicorns.git'
+            developerConnection = 'scm:git:git@github.com:burdinov.com/unicorns.git'
+            url = 'https://github.com/leonbur/unicorns'
         }
     }
 }
 
-
-signing {
-    useGpgCmd()
-    sign publishing.publications.mavenJava
+//necessary boilerplate for publishing
+afterEvaluate {
+    tasks.named("generateMetadataFileForMavenPublication") {
+        dependsOn(tasks.named("plainJavadocJar"))
+    }
 }
+
