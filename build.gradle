@@ -35,7 +35,7 @@ mavenPublishing {
 
     signAllPublications()
 
-    coordinates("com.burdinov", "unicorns", "1.0")
+    coordinates("com.burdinov", "unicorns", "1.1")
 
     pom {
         name = "Unicorns"
